@@ -36,16 +36,9 @@ service awslogs start
 chkconfig awslogs on
 
 # Download splunk.
-aws s3 cp s3://dwmkerr-public/splunk-7.0.0-c8a78efdd40f-Linux-x86_64.tgz ./splunk.tgz
-tar xvzf splunk.tgz -C /opt
-
-# Everything else we do now is with the splunk binary.
-cd /opt/splunk/bin
-
-# Start splunk on reboot, then start splunk. Set the admin password.
-./splunk enable boot-start --accept-license
-./splunk start --accept-license
-./splunk edit user admin -password 123 -role admin -auth admin:changeme
-
-# Enable receiving of events on 9997.
-./splunk enable listen 9997 -auth admin:123
+yum install docker
+docker pull splunk/splunk
+docker run -d -e "SPLUNK_START_ARGS=--accept-license" \
+       -e "SPLUNK_ENABLE_LISTEN=9997"
+       -e "SPLUNK_USER=root" -p "8000:8000" -p "9997:9997" \
+       --name splunk splunk/splunk
