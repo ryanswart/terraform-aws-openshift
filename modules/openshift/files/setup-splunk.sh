@@ -41,4 +41,5 @@ docker pull splunk/splunk
 docker run -d -e "SPLUNK_START_ARGS=--accept-license" \
        -e "SPLUNK_ENABLE_LISTEN=9997"
        -e "SPLUNK_USER=root" -p "8000:8000" -p "9997:9997" \
+       --restart unless-stopped
        --name splunk splunk/splunk
